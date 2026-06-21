@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reumatológia — Vizsgafelkészítő összefoglaló</title>
+<style>
+  :root{
+    --paper:#F6F1E7;
+    --paper-2:#EFE7D8;
+    --ink:#231F1A;
+    --ink-soft:#5B5347;
+    --rule:#D8CDB6;
+    --accent:#8B3A2B;       /* deep terracotta/rust */
+    --accent-2:#3F5A52;     /* muted clinical teal-green */
+    --accent-soft:#E7D9C5;
+    --gold:#A8782E;
+    --white:#FFFDF8;
+    --danger:#7A2424;
+    --danger-bg:#F3E2DE;
+    --shadow: 0 1px 2px rgba(35,31,26,0.06), 0 4px 14px rgba(35,31,26,0.07);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, 'Times New Roman', serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:980px;
+    margin:0 auto;
+    padding:28px 22px 80px;
+  }
+
+  /* ===== HEADER ===== */
+  .masthead{
+    border-bottom:3px double var(--ink);
+    padding-bottom:18px;
+    margin-bottom:22px;
+    position:relative;
+  }
+  .masthead .eyebrow{
+    font-family: Georgia, serif;
+    font-style:italic;
+    letter-spacing:0.04em;
+    color:var(--accent);
+    font-size:13px;
+    text-transform:uppercase;
+    margin:0 0 4px;
+  }
+  .masthead h1{
+    margin:0;
+    font-size:clamp(28px,4vw,40px);
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .masthead .sub{
+    margin:6px 0 0;
+    color:var(--ink-soft);
+    font-size:15px;
+  }
+  .masthead .latin-tag{
+    font-style:italic;
+    color:var(--accent-2);
+  }
+
+  /* ===== STATS STRIP ===== */
+  .stats{
+    display:flex;
+    gap:0;
+    margin-bottom:26px;
+    border:1px solid var(--rule);
+    background:var(--white);
+    border-radius:3px;
+    overflow:hidden;
+    flex-wrap:wrap;
+  }
+  .stat{
+    flex:1;
+    min-width:120px;
+    padding:12px 16px;
+    border-right:1px solid var(--rule);
+    text-align:center;
+  }
+  .stat:last-child{border-right:none;}
+  .stat .num{
+    font-size:24px;
+    font-weight:700;
+    color:var(--accent);
+    font-family: Georgia, serif;
+    display:block;
+  }
+  .stat .lbl{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-soft);
+  }
+
+  /* ===== TABS ===== */
+  .tabs{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+    border-bottom:1px solid var(--rule);
+    padding-bottom:14px;
+  }
+  .tab-btn{
+    font-family: inherit;
+    background:var(--paper-2);
+    border:1px solid var(--rule);
+    color:var(--ink-soft);
+    padding:9px 16px;
+    border-radius:20px;
+    font-size:13.5px;
+    cursor:pointer;
+    transition:all .15s ease;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-weight:600;
+  }
+  .tab-btn .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:currentColor;
+    opacity:0.5;
+  }
+  .tab-btn:hover{
+    background:var(--accent-soft);
+    color:var(--ink);
+  }
+  .tab-btn.active{
+    background:var(--ink);
+    color:var(--paper);
+    border-color:var(--ink);
+  }
+  .tab-btn.active .dot{
+    background:#fff;
+    opacity:1;
+  }
+  .tab-btn .count{
+    font-size:11px;
+    opacity:0.65;
+    font-weight:400;
+  }
+
+  /* glossary tab gets distinct color */
+  .tab-btn[data-tab="glossary"]{
+    border-style:dashed;
+  }
+
+  /* ===== CATEGORY HEADER ===== */
+  .cat-head{
+    margin-bottom:18px;
+    padding:14px 18px;
+    background:linear-gradient(135deg, var(--accent-soft), var(--paper-2));
+    border-left:4px solid var(--accent);
+    border-radius:2px;
+  }
+  .cat-head h2{
+    margin:0;
+    font-size:22px;
+  }
+  .cat-head .latin{
+    font-style:italic;
+    color:var(--accent-2);
+    font-size:14px;
+    margin-top:2px;
+  }
+
+  /* ===== SEARCH ===== */
+  .search-row{
+    margin-bottom:18px;
+  }
+  .search-row input{
+    width:100%;
+    padding:11px 16px;
+    font-family:inherit;
+    font-size:15px;
+    border:1.5px solid var(--rule);
+    border-radius:6px;
+    background:var(--white);
+    color:var(--ink);
+  }
+  .search-row input:focus{
+    outline:none;
+    border-color:var(--accent);
+  }
+  .search-row input::placeholder{
+    color:#9c9385;
+    font-style:italic;
+  }
+
+  /* ===== CARD GRID ===== */
+  .cards{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+
+  .card{
+    background:var(--white);
+    border:1px solid var(--rule);
+    border-radius:6px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+
+  .card-head{
+    padding:14px 18px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    user-select:none;
+  }
+  .card-head:hover{ background:var(--paper-2); }
+
+  .card-titles{ flex:1; min-width:0; }
+  .card-latin{
+    font-style:italic;
+    font-weight:700;
+    font-size:18px;
+    color:var(--ink);
+    display:block;
+  }
+  .card-hu{
+    font-size:13.5px;
+    color:var(--accent-2);
+    font-weight:600;
+    margin-top:1px;
+  }
+
+  .chev{
+    width:22px;height:22px;
+    flex-shrink:0;
+    color:var(--ink-soft);
+    transition:transform .2s ease;
+  }
+  .card.open .chev{ transform:rotate(180deg); }
+
+  .card-body{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .25s ease;
+  }
+  .card.open .card-body{
+    max-height:none;
+  }
+
+  .field-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:0;
+    border-top:1px solid var(--rule);
+  }
+
+  .field{
+    padding:13px 18px;
+    border-bottom:1px solid var(--rule);
+  }
+  .field:last-child{ border-bottom:none; }
+
+  .field-label{
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    font-weight:700;
+    margin-bottom:5px;
+    display:flex;
+    align-items:center;
+    gap:7px;
+  }
+  .field-label .ico{
+    width:14px;height:14px;
+    flex-shrink:0;
+  }
+
+  .field.oka{ background:#FBF7EF; }
+  .field.oka .field-label{ color:var(--gold); }
+
+  .field.tunetei{ background:#FBF0EC; }
+  .field.tunetei .field-label{ color:var(--accent); }
+
+  .field.radio{ background:#EEF3F1; }
+  .field.radio .field-label{ color:#3D6B5E; }
+
+  .field.kezeles{ background:#EEF1F6; }
+  .field.kezeles .field-label{ color:#3A5A8C; }
+
+  .field-text{
+    font-size:14.5px;
+    color:var(--ink);
+    line-height:1.55;
+  }
+  .field-text strong.warn{
+    color:var(--danger);
+    background:var(--danger-bg);
+    padding:0 4px;
+    border-radius:3px;
+  }
+
+  /* ===== LATIN WORDS FIELD ===== */
+  .field.latinwords{
+    background:var(--paper-2);
+  }
+  .field.latinwords .field-label{ color:var(--gold); }
+  .latin-word-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .latin-word-chip{
+    background:var(--white);
+    border:1px solid var(--rule);
+    border-radius:5px;
+    padding:6px 12px;
+    font-size:13.5px;
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+    white-space:nowrap;
+  }
+  .latin-word-chip .lt{
+    font-style:italic;
+    font-weight:700;
+    color:var(--accent-2);
+  }
+  .latin-word-chip .ar{
+    color:var(--ink-soft);
+    font-size:12px;
+  }
+  .latin-word-chip .hu{
+    color:var(--ink);
+  }
+
+  /* ===== GLOSSARY ===== */
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:10px;
+  }
+  .gterm{
+    background:var(--white);
+    border:1px solid var(--rule);
+    border-radius:5px;
+    padding:10px 14px;
+  }
+  .gterm .t{
+    font-style:italic;
+    font-weight:700;
+    color:var(--accent-2);
+    font-size:14.5px;
+  }
+  .gterm .d{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+
+  .no-results{
+    text-align:center;
+    padding:40px 20px;
+    color:var(--ink-soft);
+    font-style:italic;
+  }
+
+  /* ===== FOOTER ===== */
+  .footnote{
+    margin-top:36px;
+    padding-top:16px;
+    border-top:1px solid var(--rule);
+    font-size:12.5px;
+    color:var(--ink-soft);
+    text-align:center;
+    font-style:italic;
+  }
+
+  @media (max-width:600px){
+    .wrap{ padding:18px 14px 60px; }
+    .masthead h1{ font-size:26px; }
+    .stat{ min-width:90px; padding:10px 8px; }
+    .stat .num{ font-size:19px; }
+    .tab-btn{ padding:8px 12px; font-size:12.5px; }
+    .card-latin{ font-size:16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Vizsgafelkészítő összefoglaló</p>
+    <h1>Reumatológia &amp; mozgásszervi kórképek</h1>
+    <p class="sub">30 kidolgozott tétel rendszerezve · <span class="latin-tag">Oka · Tünetei · Radiológiai kép · Kezelés</span> bontásban</p>
+  </header>
+
+  <div class="stats" id="statsRow"></div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="search-row">
+    <input type="text" id="searchInput" placeholder="Keresés kórkép neve vagy tünet szerint… (pl. „radicularis”, „epicondylitis”)">
+  </div>
+
+  <div id="catHeadWrap"></div>
+  <div class="cards" id="cardsWrap"></div>
+  <div id="glossaryWrap"></div>
+
+  <p class="footnote">Forrás: kidolgozott tételek jegyzete · Összeállítva szóbeli vizsgára való felkészüléshez</p>
+
+</div>
+
+<script>
+const DATA = {"categories": [{"id": "gerinc", "title": "Gerincoszlop betegségei", "latin": "Morbi columnae vertebralis", "icon": "spine", "items": [{"latin": "Discus hernia", "hu": "Porckorongsérv", "oka": "A discus intervertebralis degeneratív elváltozása. Statikus vagy dinamikus túlterhelés hatására az anulus fibrosus lamellái felrostozódnak és elszakadnak, így a nucleus pulposus kitüremkedik (protrusio/extrusio) vagy kiszakad (sequestratio), mechanikusan komprimálva a duralis zsákot vagy a kilépő spinalis ideggyököket.", "tunetei": "Heves, éles, radicularis (ideggyöki) fájdalom az érintett dermatoma lefutása mentén. Paraesthesia (zsibbadás), reflexes izomvédekezés (defensive spasm), antalgiás kényszertartás, a szegmentális mozgástartomány beszűkülése, motoros kiesési tünetek (izomgyengeség, reflexkiesés).", "radiologia": "Natív röntgenen közvetett jelként a csigolyaközti rés beszűkülése látható. T2-súlyozott sagittalis és axialis MR felvételen pontosan ábrázolódik a sérv lokalizációja, mérete, a duralis zsák és az ideggyökök kompressziója, valamint az anulus fibrosus szakadása.", "kezeles": "Akut szakaszban antalgiás fektetés, tehermentesítés. Stabilizáció után mechanikai dekompressziós mozgásterápia (pl. McKenzie-módszer), a mély törzsstabilizáló izmok (mm. multifidi, m. transversus abdominis) erősítése. Manuálisan a hypertonusos paravertebralis izomzat lágy oldása javítja a közérzetet.", "latin_words": [{"term": "discus intervertebralis", "hu": "csigolyaközti porckorong"}, {"term": "anulus fibrosus", "hu": "porckorong rostos gyűrűje"}, {"term": "nucleus pulposus", "hu": "porckorong kocsonyás magja"}, {"term": "protrusio", "hu": "porckorong-előboltosulás"}, {"term": "extrusio", "hu": "porckoronganyag nagyobb kitüremkedése"}, {"term": "sequestratio", "hu": "kiszakadt porckorongrész leválása"}, {"term": "dermatoma", "hu": "ideggyökhöz tartozó bőrterület"}, {"term": "paraesthesia", "hu": "zsibbadás, bizsergés"}, {"term": "radicularis", "hu": "ideggyöki eredetű"}]}, {"latin": "Scoliosis", "hu": "Gerincferdülés", "oka": "Legtöbbször idiopátiás (80%), növekedési aszimmetria a csigolyatestek epiphysealis zónáiban, de hátterében állhat neuromuscularis diszfunkció vagy congenitalis csigolyadeformitás (pl. félcsigolya) a csontosodási fázis lezárulása előtt.", "tunetei": "A gerincoszlop rögzült, oldalirányú elhajlása a frontális síkban, amely a transversalis síkban a csigolyák rotációjával és torziójával társul. Aszimmetrikus váll-, lapocka- és csípőmagasság. Előrehajláskor (Adams-teszt) a rotáció miatt kialakuló háti bordapúp (gibbus) vagy lumbális izomgát válik láthatóvá.", "radiologia": "Teljes gerinc AP és oldalirányú röntgenfelvétel álló helyzetben. Kimutatja az oldalirányú görbületet, a görbület mértékét fokokban (Cobb-szög), a csigolyatestek rotációját (Nash-Moe index), valamint a csontos érettség stádiumát a csípőlapát apophysisének elcsontosodása alapján (Risser-jel).", "kezeles": "20 Cobb-fok alatt: háromdimenziós korrekciós gyógytorna (Schroth-terápia), törzsizom-stabilizáció. 20–45 fok között: egyedi korrekciós fűző (korzett) folyamatos viselése a csontos növekedés lezárultáig. Manuálisan a konkáv oldali zsugorodott izmok, fasciák nyújtása, a konvex oldali megnyúlt, atrophiás izomzat tonizáló frissítése a cél.", "latin_words": [{"term": "idiopátiás", "hu": "ismeretlen eredetű"}, {"term": "epiphysealis", "hu": "csontvégi növekedési területre vonatkozó"}, {"term": "congenitalis", "hu": "veleszületett"}, {"term": "frontális sík", "hu": "elülső-hátsó testfelosztó sík"}, {"term": "transversalis sík", "hu": "haránt irányú sík"}, {"term": "gibbus", "hu": "bordapúp"}, {"term": "apophysis", "hu": "csontos nyúlvány"}]}, {"latin": "Discopathia", "hu": "Porckorongbántalom / Porckorong-degeneráció", "oka": "A discus intervertebralis krónikus anyagcserezavara és dehidratációja. Az idősödés vagy krónikus túlterhelés miatt a porckorong proteoglikán-tartalma csökken, elveszíti vízmegkötő képességét, rugalmasságát és vertikális magasságát, az anulus fibrosus rostjai pedig feltöredeznek.", "tunetei": "Tompa, mély, diffúz gerincfájdalom (lumbalgia, dorsalgia), amely tartós statikus terhelésre fokozódik, pihenésre enyhül. Kifejezett reggeli merevségérzet a gerincen, a mozgástartomány mechanikai beszűkülése, kompenzatórikus paravertebralis hypertonus. Radicularis kiesési tünetek nincsenek.", "radiologia": "Kétirányú gerinc-röntgenfelvételen látható a csigolyaközti rések beszűkülése (a porckorong ellaposodása), a zárólemezek subchondralis sclerosisos tömörülése és peremi osteophyták (csontcsőrök) megjelenése. MR-en a T2-súlyozott képeken a víztartalom elvesztése miatti „black disc” jelenség látható.", "kezeles": "Tehermentesített gyógytorna, szegmentális mobilizáció, a mély törzsizmok erősítése. Manuális lágyrész-technikák, a reflexes izomfeszülések és myofascialis letapadások oldása, trakciós és mobilizációs eljárások a csigolyaközti rések tágítására és a szöveti folyadékcsere frissítésére.", "latin_words": [{"term": "discus intervertebralis", "hu": "csigolyaközti porckorong"}, {"term": "anulus fibrosus", "hu": "porckorong rostos gyűrűje"}, {"term": "lumbalgia", "hu": "derékfájdalom"}, {"term": "dorsalgia", "hu": "háti fájdalom"}, {"term": "paravertebralis", "hu": "gerinc melletti"}, {"term": "subchondralis", "hu": "porc alatti"}, {"term": "osteophyta", "hu": "csontkinövés, csontcsőr"}]}, {"latin": "Spondylitis ankylopoetica", "hu": "Bechterew-kór / Merevedéses gerincgyulladás", "oka": "Genetikai meghatározottságú (szoros korreláció a HLA-B27 szövetspecifikus antigénnel), krónikus, szisztémás autoimmun gyulladásos kórfolyamat, amely elsődlegesen az enthesis pontokat (inak, szalagok tapadási helyeit), az SI (sacroiliacalis) ízületeket és a gerinc kisízületeit érinti.", "tunetei": "Hajnali és éjszakai derékfájdalom, amely mozgásra, tornára kifejezetten javul, pihenésre fokozódik. Progresszív, alulról felfelé terjedő gerincmerevség, a thoracalis kyphosis fokozódása, a lumbális lordosis elsimulása, a mellkaskitérés beszűkülése (légzési nehezítettség), enthesitis (pl. Achilles-ín tapadási fájdalma).", "radiologia": "Medence AP és gerinc röntgenfelvétel. Korai szakaszban az SI ízületek elmosódottsága, erosiója látható (sacroiliitis stádiumai). Később a csigolyatestek sarkainak erosiója (Romanus-lézió), négyszögesedése, majd a lig. longitudinale anterius és posterius elcsontosodása, syndesmophyták képződése („bambusznád-gerinc”).", "kezeles": "Folyamatos, intenzív, mindennapos gyógytorna és légzőtorna a mozgásszabadság és a mellkaskitérés megőrzésére, a fixált kontraktúrák megelőzésére. Manuálisan kizárólag szigorúan gyulladásmentes fázisban alkalmazható lágy, relaxáló myofascialis technika a hátizmok feszülésének csökkentésére.", "latin_words": [{"term": "sacroiliacalis", "hu": "keresztcsont-csípőcsont közötti"}, {"term": "enthesis", "hu": "ín vagy szalag csonttapadási helye"}, {"term": "enthesitis", "hu": "ín- vagy szalagtapadás gyulladása"}, {"term": "thoracalis kyphosis", "hu": "háti gerincgörbület fokozódása"}, {"term": "lumbalis lordosis", "hu": "ágyéki előregörbület"}, {"term": "erosio", "hu": "kimart, felmaródott csontfelszín"}, {"term": "syndesmophyta", "hu": "szalag eredetű csontos összenövés"}]}, {"latin": "Spondylosis", "hu": "Csigolyakopás / Spondylarthrosis", "oka": "A gerinc szegmentumainak krónikus, degeneratív folyamata. A porckorongok magasságának csökkenése miatt megváltoznak a gerinc mechanikai viszonyai, a csigolyatestek peremeire és a kisízületek (intervertebralis ízületek) felszíneire fokozott nyomás nehezedik, amit a szervezet csontos felrakódásokkal próbál stabilizálni.", "tunetei": "Lokális, tompa háti, nyaki vagy ágyéki fájdalom, amely a mozgás megkezdésekor (indítási fájdalom) és tartós terhelésre jelentkezik. A gerinc rotációs és flexiós mozgásainak mechanikai beszűkülése, ropogás (crepitacio), reflexes paravertebralis izomgörcs, előrehaladott stádiumban a canalis spinalis vagy a foramenek szűkülete miatti idegnyomás.", "radiologia": "Kétirányú és funkcionális gerinc-röntgenfelvétel. Jól láthatóak a csigolyatestek zárólemezeinek szélén kialakuló csontcsőrök, kapcsok (osteophyták), a kisízületi rések beszűkülése, a facies articulares sclerosisos tömörülése és subchondralis cysták kialakulása.", "kezeles": "Funkcionális gerincmobilizáció, a törzsizmok izometrikus és dinamikus megerősítése, tartáskorrekció. Manuálisan a fixált csontos blokkok környezetében kialakult kompenzatórikus izomfeszülések mélyreható oldása, a lágyrészek dörzsölő, lazító frissítése.", "latin_words": [{"term": "intervertebralis", "hu": "csigolyák közötti"}, {"term": "crepitacio", "hu": "ropogó, recsegő ízületi hang"}, {"term": "canalis spinalis", "hu": "gerincvelői csatorna"}, {"term": "foramen", "hu": "idegkilépési csatorna"}, {"term": "facies articulares", "hu": "ízületi felszínek"}, {"term": "subchondralis", "hu": "porc alatti"}]}, {"latin": "Scheuermann-kór", "hu": "Fiatalkori kyphosis / Osteochondritis vertebralis", "oka": "A csigolyatestek másodlagos csontosodási magvainak (zárólemezek gyűrűs apophysiseinek) aszimmetrikus növekedési zavara és aszeptikus nekrózisa serdülőkorban. A csigolyatestek elülső része elmarad a fejlődésben, aminek következtében ék alakúvá válnak, és a porckorongállomány betüremkedik a csontállományba.", "tunetei": "Merev, fixált, aktívan nem korrigálható thoracalis kyphosis (kerek hát), fáradékonyság, háti fájdalom fizikai vagy hosszas ülő terhelésre. Kompenzatórikus lumbális és cervicalis hyperlordosis. Az érintett szakaszon a paravertebralis izomzat kifejezetten kötött, a mellizmok (m. pectoralis major) zsugorodottak.", "radiologia": "Oldalirányú háti gerinc-röntgenfelvétel. Diagnosztikai kritérium: legalább 3 egymás melletti csigolyatest elülső részének minimum 5 fokos ék alakú ellaposodása. Látható a zárólemezek egyenetlensége, a csontállományba fúródó nucleus pulposus hernia-nyomai (Schmorl-csomók) és a csigolyaközti rések beszűkülése.", "kezeles": "Specifikus tartásjavító gyógytorna, a hátizomzat (m. erector spinae, m. rhomboidei) excentrikus és koncentrikus erősítése, a zsugorodott elülső lánc nyújtása. Manuálisan a hypertonusos, túlterhelt háti izomcsoportok mély, fellazító átdolgozása, a mellizmok myofascialis nyújtása.", "latin_words": [{"term": "apophysis", "hu": "csontos nyúlvány"}, {"term": "thoracalis kyphosis", "hu": "háti gerincgörbület"}, {"term": "hyperlordosis", "hu": "fokozott előregörbület"}, {"term": "nucleus pulposus", "hu": "porckorong kocsonyás magja"}, {"term": "Schmorl-csomó", "hu": "porckorong becsapódása a csontba"}]}, {"latin": "Spondylolysis", "hu": "Csigolyaív-szakadás", "oka": "A csigolyaív (istmus) egy- vagy kétoldali folytonossági hiánya az ízületi nyúlványok közötti részen (pars interarticularis). Kialakulásában congenitalis csontosodási defektus, genetikai hajlam, vagy ismétlődő hyperextenziós és rotációs mikrotraumák okozta fáradásos törés játszik szerepet (leggyakrabban az L5-ös csigolyán).", "tunetei": "Lokalizált, tompa lumbosacralis derékfájdalom, amely a törzs hátrahajlásakor (hyperextenzió) és csavarásakor kifejezetten fokozódik. A lumbális erector spinae és a hamstringek reflexes, védekező feszülése, tapintható izomtónus-növekedés.", "radiologia": "45 fokos ferde irányú lumbosacralis röntgenfelvétel (Lachapèle-felvétel). Ezen ábrázolódik a klasszikus „szakadt nyakörvű kutyus” tünet, ahol a kutyus nyakán látható rés jelzi az ívszakadás helyét. CT vizsgálattal a csontos folytonossági hiány precízen lokalizálható.", "kezeles": "A törzs- és core izmok intenzív, statikus stabilizáló erősítése a nyíróerők csökkentésére. A hyperextenziós mozgások szigorú kerülése. Manuális módszer: a reflexes paravertebralis és a zsugorodott hamstring izomzat kíméletes, nyújtó lazítása.", "latin_words": [{"term": "pars interarticularis", "hu": "csigolyaív ízületi nyúlványok közötti része"}, {"term": "congenitalis", "hu": "veleszületett"}, {"term": "hyperextensio", "hu": "túlzott hátrahajlítás"}, {"term": "lumbosacralis", "hu": "ágyéki-keresztcsonti területre vonatkozó"}]}, {"latin": "Spondylolisthesis", "hu": "Csigolyaelcsúszás", "oka": "Kétoldali csigolyaív-szakadás (spondylolyticus) vagy a kisízületek súlyos degeneratív instabilitása (dysplasticus/degeneratív) miatt a felül lévő csigolyatest a rajta lévő teljes gerincoszloppal együtt előrefelé (ventralis irányba) elcsúszik az alatta lévő csigolyatest zárólemezén.", "tunetei": "Fokozott ágyéki lordózis, a medence hátrabillenése, a törzs megrövidülése, a has előredőlése („lépcsőfok-tünet”). Terhelési derékfájdalom, súlyos esetben a cauda equina vagy az ideggyökök kompressziója miatti radicularis fájdalom, claudicatio spinalis, érzészavar.", "radiologia": "Oldalirányú lumbosacralis röntgenfelvétel álló helyzetben. Egyértelműen mutatja az elmozdulás mértékét (Meyerding-féle beosztás: I. stádium 25%-ig, II. stádium 50%-ig, III. stádium 75%-ig, IV. stádium 100%-ig).", "kezeles": "Szigorúan stabilizáló, flexiós irányú gyógytorna (pl. Williams-torna), a hasizmok és a medencefenék izmainak megerősítése, a nyíróerők mechanikai minimalizálása. Manuálisan a közvetlen csontos nyomás és a lumbalis extensio TILOS! A kompenzáló izomcsoportok lágy, tónusnormalizáló átdolgozása engedélyezett.", "latin_words": [{"term": "ventralis", "hu": "hasi, elülső irányú"}, {"term": "dysplasticus", "hu": "fejlődési rendellenességgel kapcsolatos"}, {"term": "cauda equina", "hu": "lófarokidegek; alsó gerincszakaszi idegkötteg"}, {"term": "claudicatio spinalis", "hu": "gerinceredetű járási fájdalom"}, {"term": "lumbosacralis", "hu": "ágyéki-keresztcsonti területre vonatkozó"}]}]}, {"id": "izuleti", "title": "Ízületi és csontbetegségek", "latin": "Morbi articulorum et ossium", "icon": "bone", "items": [{"latin": "Rheumatoid arthritis", "hu": "Idült sokízületi gyulladás", "oka": "Szisztémás, krónikus autoimmun kórfolyamat. Az immunrendszer diszfunkciója miatt termelődő autoantitestek megtámadják az ízületi belhártyát (synoviumot), ami proliferatív gyulladásos szövetté (pannus) alakul. Ez a pannus ráterjed a porcfelszínre, lebontja azt, majd destruálja a subchondralis csontot is.", "tunetei": "Szimmetrikus polyarthritis, amely típusosan a kéz és a láb kisízületeit (MCP, PIP, MTP) érinti. Kifejezett, legalább 1 órán át tartó reggeli ízületi merevség, fluktuáló duzzanat, helyi melegség, fájdalom. Késői stádiumban ulnaris deviáció, hattyúnyak- és gomblyuk-deformitások, muscularis atrophia, ankylosis.", "radiologia": "Kéz és láb kétirányú röntgenfelvétele. Korai fázisban periarticularis osteoporosis és lágyrész-duzzanat. Később az ízületi rések egyenletes beszűkülése, marginalis erosiók, subluxatiók, végstádiumban teljes csontos ankylosis.", "kezeles": "Akut fázisban gyulladáscsökkentés, nyugalomba helyezés, lokális cryoterápia. Remissziós szakaszban: kíméletes, ízületvédő gyógytorna a kontraktúrák megelőzésére. Manuálisan a reflexes izomfeszülések lágy oldása, a periarticularis lágyrészek óvatos frissítése (akut ízület manuális fogása TILOS!).", "latin_words": [{"term": "autoimmun", "hu": "saját szövet ellen irányuló immunfolyamat"}, {"term": "synovium", "hu": "ízületi belhártya"}, {"term": "pannus", "hu": "gyulladásos burjánzó ízületi szövet"}, {"term": "subchondralis", "hu": "porc alatti"}, {"term": "polyarthritis", "hu": "több ízület gyulladása"}, {"term": "ulnaris deviáció", "hu": "kisujj felé elhajlás"}, {"term": "ankylosis", "hu": "ízületi merevség, elcsontosodás"}, {"term": "periarticularis", "hu": "ízület körüli"}]}, {"latin": "Osteoporosis", "hu": "Csontritkulás", "oka": "A csontszövet anyagcserezavara, amelyben a csontbontás (osteoclast tevékenység) sebessége meghaladja a csontépítés (osteoblast tevékenység) ütemét. Kiváltó okai: posztmenopauzális ösztrogénhiány, szenilis involúció, kalcium- és D3-vitamin-hiány, tartós immobilizáció, kortikoszteroid-terápia.", "tunetei": "Sokáig teljesen aszimptomatikus („néma kór”). Később a csigolyatestek mikrofraktúrái miatt tompa, diffúz hátfájdalom, a testmagasság csökkenése, fokozódó thoracalis kyphosis (özvegypúp). Vezető klinikai tünet: kis energiájú traumára jelentkező patológiás csonttörések (combnyak, csukló/Colles-törés, csigolya).", "radiologia": "Natív röntgenen csak jelentős csontvesztés (>30%) után látható transzparencia-növekedés, ék- vagy halcsigolya-deformitások. Arany standard: DEXA vizsgálat — az L1-L4 és a combnyak régiójában mért T-score ≤ -2,5 SD utal osteoporosisra.", "kezeles": "Fokozatosan felépített, gravitációs terhelést biztosító mozgásterápia (séta, mérsékelt ellenállásos torna), egyensúlyfejlesztés az elesések megelőzésére. Manuális eljárások: erős mechanikai nyomások, triggerpont-nyomások, direkt csontos mobilizációk szigorúan TILOSAK a törésveszély miatt! Lágy, felületes simító fogások alkalmazhatók.", "latin_words": [{"term": "osteoclast", "hu": "csontbontó sejt"}, {"term": "osteoblast", "hu": "csontépítő sejt"}, {"term": "involúció", "hu": "visszafejlődés"}, {"term": "immobilizáció", "hu": "rögzítés, mozdulatlanná tétel"}, {"term": "aszimptomatikus", "hu": "tünetmentes"}, {"term": "DEXA", "hu": "csontsűrűségmérő röntgenvizsgálat"}]}, {"latin": "Coxarthrosis", "hu": "Csípőízületi kopás", "oka": "A csípőízület (articulatio coxae) primer vagy szekunder (pl. congenitalis csípődiszplázia, Perthes-kór utáni) degeneratív ízületi betegsége. A hyalinporc biomechanikai túlterhelés vagy anyagcserezavar miatt elveszíti rugalmasságát, fellazul, fibrillálódik és ulcerálódik.", "tunetei": "Ágyékba, comb elülső felszínére, valamint a térdbe sugárzó indítási fájdalom (reggeli felkeléskor) és terhelési fájdalom, amely pihenésre szűnik. Antalgiás sántítás (Trendelenburg- vagy Duchenne-tünet), a csípőízület mozgásainak progresszív beszűkülése: elsőként a berotáció és az abductio korlátozódik, majd flexiós-adductiós-kirotációs kontraktúra alakul ki.", "radiologia": "Csípőízület AP és „békapozíciójú” röntgenfelvétele. Aszimmetrikus ízületi rés-beszűkülés, a vápaperemeken és a combcsontfej-nyak határon osteophyták, subchondralis sclerosisos tömörülés, degeneratív pseudocysták (geodák).", "kezeles": "Testsúlyredukció, tehermentesített hydroterápiás torna, kerékpározás, a m. glutaeus medius és maximus szelektív erősítése. Manuálisan a zsugorodott adductorok és a m. iliopsoas intenzív nyújtása, a farizmok és a m. tensor fasciae latae mély, fellazító átdolgozása.", "latin_words": [{"term": "articulatio coxae", "hu": "csípőízület"}, {"term": "congenitalis", "hu": "veleszületett"}, {"term": "subchondralis", "hu": "porc alatti"}, {"term": "osteophyta", "hu": "csontkinövés, csontcsőr"}, {"term": "pseudocysta", "hu": "álciszta, valódi hámfal nélküli üreg"}, {"term": "contractura", "hu": "zsugorodás miatti mozgáskorlátozottság"}]}, {"latin": "Gonarthrosis", "hu": "Térdízületi kopás", "oka": "A térdízület femorotibialis vagy femoropatellaris kompartmentjének krónikus, degeneratív megbetegedése. Kiváltó tényezők: elhízás, tengelyeltérések (genu valgum – X-láb, genu varum – O-láb), korábbi intraarticularis törések, meniscussérülések vagy szalagszakadások.", "tunetei": "Terhelésre, különösen lépcsőzéskor és guggoláskor jelentkező térdfájdalom. Reggeli indítási merevség, ropogás (crepitacio). Az ízületi tok megvastagodása, intraarticularis folyadékgyülem (hydrops genus, Baker-cysta). Flexiós kontraktúra, a m. quadriceps femoris kifejezett atrophiája.", "radiologia": "Kétirányú és terheléses térdröntgen, valamint patella-tangenciális felvétel. Ízületi rés-beszűkülés (többnyire medialisan genu varum esetén), osteophyták a condylusok peremén és a patella pólusain, subchondralis sclerosis.", "kezeles": "A m. quadriceps femoris és a csípőabductorok célzott, tehermentesített erősítése. Flexiós kontraktúra nyújtása. Manuális módszerek: a comb- és vádliizomzat tónusának normalizálása, a patella mobilizációja, a lágyrészek dörzsölő átdolgozása.", "latin_words": [{"term": "articulatio genus", "hu": "térdízület"}, {"term": "genu valgum", "hu": "X-láb"}, {"term": "genu varum", "hu": "O-láb"}, {"term": "intraarticularis", "hu": "ízületen belüli"}, {"term": "hydrops", "hu": "ízületi folyadékgyülem"}, {"term": "contractura", "hu": "zsugorodás miatti mozgáskorlátozottság"}, {"term": "atrophia", "hu": "sorvadás"}]}, {"latin": "Pes planus", "hu": "Lúdtalp", "oka": "A láb statikai elégtelensége, amely során a láb hosszanti és/vagy harántboltozatos szerkezete a szalagrendszer megnyúlása és az aktív izomzat elégtelensége miatt ellaposodik, a calcaneus pedig valgus irányba dől.", "tunetei": "Talpi és rüszttáji fájdalom, amely tartós álláskor vagy gyalogláskor jelentkezik, kisugározhat a vádliba, térdbe, derékba. A láb gyors fáradékonysága, a boka belső oldalának előreugrása, a lábfej abductiója. Cipősarok belső peremének fokozott kopása.", "radiologia": "Terheléses (álló helyzetű) láb AP és oldalirányú röntgenfelvétel. Az oldalirányú képen a hosszanti boltozat ívének ellaposodása, a calcaneus dőlésszögének csökkenése, tengelytörés a talonavicularis ízületben.", "kezeles": "Rendszeres, specifikus aktív lábtorna a láb saját izmainak megerősítésére. Egyedi, biomechanikailag korrigált talpbetét viselése. Manuálisan a megrövidült lig. plantare és a m. triceps surae nyújtása, a talpi bőnye myofascialis fellazítása.", "latin_words": [{"term": "ligamentum plantare", "hu": "talpi szalag"}, {"term": "valgus", "hu": "kifelé hajló irányú elváltozás"}, {"term": "calcaneus", "hu": "sarokcsont"}, {"term": "abductio", "hu": "távolítás a középvonaltól"}, {"term": "clavus", "hu": "bőrkeményedés, tyúkszem"}]}, {"latin": "Luxatio coxae", "hu": "Csípőficam", "oka": "A combcsontfej (caput femoris) teljes és tartós elmozdulása a csípőízületi vápából. Lehet congenitalis (veleszületett csípődiszplázia végstádiuma) vagy szerzett/traumás (nagy erejű külső erőhatás, ami átszakítja az ízületi tokot és a lig. teres femorist).", "tunetei": "Traumás esetben: elviselhetetlen, akut fájdalom, teljes funkciókiesés. Tipikus végtag-kényszertartás: hátsó ficam esetén a végtag rövidült, adductoros, berotált és enyhén flexiós helyzetben rögzül. Veleszületett formánál: aszimmetrikus comb- és farredők, pozitív abductiós korlátozottság, Ortolani- és Barlow-féle kattanási tünet.", "radiologia": "Kétirányú csípő- és medenceröntgen. Traumás ficamnál a combcsontfej diszlokációja az acetabulumhoz képest. Veleszületett csípőficamnál a sekély, meredek vápafelszín, a combcsontfej magassági eltolódása, Menard-Shenton vonal megtörése.", "kezeles": "Traumás esetben azonnali, sürgősségi orvosi narco-redukció (helyretétel), majd átmeneti rögzítés. A repositiót követően progresszív rehabilitációs gyógytorna. Manuális technikák kizárólag a csontos és szalagos gyógyulás után, a lágyrész-letapadások myofascialis oldására.", "latin_words": [{"term": "caput femoris", "hu": "combcsontfej"}, {"term": "acetabulum", "hu": "csípőízületi vápa"}, {"term": "congenitalis", "hu": "veleszületett"}, {"term": "ligamentum teres femoris", "hu": "combfejet rögzítő belső szalag"}, {"term": "adductio", "hu": "közelítés a középvonalhoz"}, {"term": "repositio", "hu": "helyretétel"}]}]}, {"id": "izom", "title": "Izmok, inak és lágyrészek kórképei", "latin": "Morbi musculorum, tendinum et textuum mollium", "icon": "muscle", "items": [{"latin": "Periarthritis humeroscapularis", "hu": "Váll körüli lágyrész-gyulladás / PHS", "oka": "A vállízület körüli periarticularis, extraarticularis képletek (izmok, inak, szalagok, bursák) krónikus mikrotraumák, túlterhelés vagy degeneráció miatti steril gyulladása — az ízület belseje nincs benne! A rotátorköpeny inas lemezének felrostozódása, impingement (becsípődés az acromion és a tuberculum majus között), az inak másodlagos kalcifikációja.", "tunetei": "Heves, diffúz vállfájdalom, amely nyugalomban és éjszaka is fennáll (a beteg nem tud az érintett oldalán aludni). Lokális nyomásérzékenység az acromion csúcsa alatt és a tuberculum majuson. A kar aktív és passzív abductiója drasztikusan beszűkül (fájdalmas ív: 60–120 fok között). Másodlagos adhezív capsulitisnél (befagyott váll) teljes mozgásképtelenség, muscularis atrophia.", "radiologia": "Natív váll-röntgenfelvételen az ízületi rés és a csontfelszínek épek, de a lágyrészekben — leggyakrabban a m. supraspinatus inában vagy a bursa subacromialéban — mészrögök (tendinitis calcificans) láthatók. Ultrahanggal vagy MR-rel a rotátorköpeny részleges vagy teljes szakadása, bursitis subdeltoidea diagnosztizálható.", "kezeles": "Akut fázisban: immobilizáció, passzív kimozgatás naponta 3-szor a fájdalomhatárig, lokális cryoterápia. A gyulladás enyhülése után: intenzív gyógytorna, manuális myofascialis release a rotátorköpeny izmain, a m. pectoralis major nyújtása. Fizioterápia: lidokainos iontoforézis, interferencia, terápiás ultrahang.", "latin_words": [{"term": "periarticularis", "hu": "ízület körüli"}, {"term": "extraarticularis", "hu": "ízületen kívüli"}, {"term": "bursa", "hu": "nyáktömlő"}, {"term": "impingement", "hu": "becsípődés, ütközési szindróma"}, {"term": "calcificatio", "hu": "elmeszesedés"}, {"term": "adhesiv capsulitis", "hu": "befagyott váll"}, {"term": "atrophia", "hu": "sorvadás"}]}, {"latin": "Myalgia", "hu": "Izomfájdalom / Myogelosis", "oka": "Az izomszövet lokális vagy diffúz funkcionális tónuszavara. Kiváltó okai: krónikus statikus túlterhelés (rossz ergonómia), reflexes védekező mechanizmusok, pszichés stressz, huzat, mikrosérülések. Tartós hypoxia alakul ki, felhalmozódnak a savas anyagcsere-termékek (tejsav), és az izomhasban kötőszövetes csomók (myogelosisok) jönnek létre.", "tunetei": "Helyi vagy kiterjedt, tompa, sajgó izomfájdalom, kifejezett merevség- és feszülésérzet. Palpációval jól elkülöníthető, nyomásérzékeny, kemény, tésztás vagy porcos tapintatú izomcsomók (trigger pontok), amelyek nyomásra lokális vagy kisugárzó fájdalmat váltanak ki. Az érintett izom nyújthatósága és ereje csökken.", "radiologia": "Röntgen, CT: csontos képletek épsége mellett lágyrész-elváltozás nem mutatható ki (negatív lelet). Nagy felbontású ultrahanggal az izomszövet lokális denzitásnövekedése, a rostszerkezet feszessége és a csökkent echogenitású myofascialis gócok vizualizálhatók.", "kezeles": "Thermoterápia (meleg pakolások, szauna) az izomzat ellazítására. Nyújtó és relaxációs gyakorlatok. A klasszikus svédmasszázs fogásai (mély simítások, dörzsölések, gyúrások) és a triggerpont-terápia a merev csomók fellazítására.", "latin_words": [{"term": "hypoxia", "hu": "oxigénhiányos állapot"}, {"term": "myogelosis", "hu": "fájdalmas izomcsomó, izomkeményedés"}, {"term": "palpatio", "hu": "tapintás"}, {"term": "echogenitás", "hu": "ultrahangos visszaverődési tulajdonság"}]}, {"latin": "Epicondylitis lateralis humeri", "hu": "Teniszkönyök", "oka": "Az alkar extensor izmainak (elsősorban a m. extensor carpi radialis brevis) közös eredési pontján, a humerus epicondylus lateralisán kialakuló krónikus enthesitis. Ismétlődő, monoton túlterhelések (pl. egérhasználat, csavarozás, teniszezés) hatására mikrosérülések keletkeznek, melyeket a szervezet nem funkcionális hegszövettel próbál gyógyítani.", "tunetei": "Kifejezett, éles fájdalom és pontszerű nyomásérzékenység a könyök külső bütykén. A fájdalom kisugárzik az alkar feszítőizmainak hasába. A tünetek fokozódnak a csukló ellenállással szembeni hátrafeszítésekor és a tárgyak megfogásakor, szorításakor — a kéz szorítóereje drasztikusan csökken.", "radiologia": "Röntgenfelvétellel csontos elváltozás általában nem látható, krónikus esetben apró perioszteális felrakódás ábrázolódhat. Ultrahanggal az extensor ín eredésének megvastagodása, szerkezeti fellazulása, folyadékgyülem és mikroszakadások mutathatók ki.", "kezeles": "Akut szakaszban pihentetés, epikondilitisz-pánt viselése. Myofascialis nyújtások. Manuálisan az alkar feszítőizmainak mély masszázsa, valamint az ín eredési pontján keresztfrikció (harántfrikció) a hegszövet fellazítására.", "latin_words": [{"term": "epicondylus lateralis", "hu": "könyök külső csontbütyke"}, {"term": "enthesitis", "hu": "ín- vagy szalagtapadás gyulladása"}, {"term": "extensio", "hu": "feszítés, hátrafeszítés"}, {"term": "hypoechogenitás", "hu": "ultrahangon sötétebb megjelenés"}]}, {"latin": "Dupuytren-contractura", "hu": "Tenyéri bőnye zsugorodása", "oka": "A tenyér bőr alatti kötőszövetes lemezének, a palmaris aponeurosisnak az ismeretlen etiológiájú, proliferatív fibroblasztos burjánzása. A normál I-es típusú kollagén helyét III-as típusú kollagén veszi át, ami kemény kötőszövetes csomók és feszülő húrok képződéséhez vezet, melyek visszafordíthatatlanul megrövidülnek.", "tunetei": "Kemény, kezdetben fájdalmatlan csomók a tenyéren (leggyakrabban a IV-V. sugár mentén), amelyek hosszanti, feszülő húrokká alakulnak. MCP és PIP ízületekben fixált flexiós kontraktúra: az ujjakat nem lehet aktívan vagy passzív erővel kinyújtani (pozitív asztal-teszt).", "radiologia": "Hagyományos röntgen: csontos deformitás nem mutatható ki (negatív lelet). Ultrahanggal vagy MR-rel a palmaris aponeurosis sávszerű vagy nodularis megvastagodása, a tenyéri inak lefutásának megtörése ábrázolható.", "kezeles": "Korai stádiumban a tenyéri fascia és az ujjflexorok intenzív manuális nyújtása, myofascialis release. Előrehaladott stádiumban (PIP flexió >30 fok) a manuális módszerek hatástalanok; orvosi beavatkozás (percutan tűs fasciotomia vagy fasciectomia) szükséges, posztoperatív gyógytornával.", "latin_words": [{"term": "palmaris aponeurosis", "hu": "tenyéri bőnye"}, {"term": "fibroblast", "hu": "kötőszövetképző sejt"}, {"term": "contractura", "hu": "zsugorodás miatti mozgáskorlátozottság"}, {"term": "flexio", "hu": "hajlítás"}, {"term": "nodularis", "hu": "csomós jellegű"}]}, {"latin": "Torticollis", "hu": "Nyakferdülés", "oka": "A nyak aszimmetrikus kényszertartása, amelyet leggyakrabban a m. sternocleidomastoideus egyoldali, spasticus tónusfokozódása vagy megrövidülése okoz. Kiváltó okai: congenitalis (szülési trauma, hematóma helyén kialakuló fibrosis) vagy szerzett (lehűlés/huzat, nyaki gerinc diszfunkciója, traumás sérülés).", "tunetei": "Fixált kényszertartás: a fej az érintett oldal felé billen (lateralflexio), az áll az ellenkező oldal felé fordul (rotatio). Heves nyaki fájdalom mozgáskísérletekre, a nyak mozgásainak teljes blokkoltsága az ellenkező irányba. A m. sternocleidomastoideus kötélszerűen megfeszül, nyomásra fájdalmas.", "radiologia": "Nyaki gerinc kétirányú röntgenfelvétele. Csontos elváltozást primer módon nem mutat, de igazolja a kényszertartást, kizárja a csontos fejlődési rendellenességeket (pl. Klippel-Feil szindróma) és a traumás luxatiót.", "kezeles": "Lokális thermoterápia az izomgörcs enyhítésére. Manuális módszer: az érintett m. sternocleidomastoideus és a környező nyakizmok óvatos, lágy, progresszív myofascialis lazítása (postisometricus relaxatio - PIR), a túloldali izmok tonizáló frissítése.", "latin_words": [{"term": "m. sternocleidomastoideus", "hu": "fejbiccentő izom"}, {"term": "congenitalis", "hu": "veleszületett"}, {"term": "hematóma", "hu": "vérömleny"}, {"term": "lateralflexio", "hu": "oldalra hajlítás"}, {"term": "rotatio", "hu": "forgó mozgás"}]}, {"latin": "Ganglion", "hu": "Ínhüvelyciszta / Ízületi ciszta", "oka": "Az ízületi tok vagy az ínhüvely synovialis membránjának jóindulatú, degeneratív, tömlős kitüremkedése. Krónikus irritáció, mikrotraumák vagy szalaglazaság miatt a tok fala meggyengül, és sűrű, hialuronsavban gazdag, zselészerű folyadék préselődik ki egy fibrosus tokba.", "tunetei": "Jól látható és tapintható, kerek vagy ovális, éles szélű, fluktuáló, tömött-rugalmas képlet (leggyakrabban a csukló háti oldalán vagy az ujjak bázisánál). Lehet fájdalmatlan, de méretétől függően a szomszédos idegeket vagy inakat nyomva lokális fájdalmat, zsibbadást okozhat.", "radiologia": "Röntgenfelvételen a csontok épek. Ultrahanggal igazolható a vékony fallal körülvett, anechogén (folyadékkal telt) képlet és anatómiai összeköttetése (nyele) az érintett ízületi tokkal vagy ínhüvellyel.", "kezeles": "Spontán is perforálódhat vagy felszívódhat; orvosilag steril punctio és lokális szteroid alkalmazható. Manuálisan a gangliont közvetlenül megnyomni vagy szétrobbantani szigorúan TILOS! Alkalmazható: a környező alkarizmok tónusának normalizálása.", "latin_words": [{"term": "synovium", "hu": "ízületi belhártya"}, {"term": "herniatio", "hu": "kitüremkedés"}, {"term": "fluktuáció", "hu": "folyadékmozgásra utaló tapintási jel"}, {"term": "anechogén", "hu": "ultrahangon folyadékos, sötét megjelenésű"}, {"term": "punctio", "hu": "leszívás, szúrásos beavatkozás"}]}, {"latin": "Epicondylitis medialis humeri", "hu": "Golfkönyök", "oka": "Az alkar flexor és pronator izmainak (elsősorban m. pronator teres, m. flexor carpi radialis) közös eredési pontján, a humerus epicondylus medialisán kialakuló krónikus enthesitis. A csukló és ujjak ismétlődő, erőteljes hajlítása, nehéz tárgyak emelése vagy monoton dobó mozdulatok okozzák.", "tunetei": "Éles fájdalom és nyomásérzékenység a könyök belső bütykén. A fájdalom az alkar tenyéri felszínének izomhasába sugárzik. A tünetek fokozódnak a csukló tenyér irányú hajlításakor (flexio) és az alkar pronációjakor, valamint erőteljes marokszorításkor.", "radiologia": "Röntgennel csontos destrukció nem látható; krónikus esetben minimális mészlerakódás ábrázolódhat. Ultrahanggal a flexor íncsoport közös eredésének megvastagodása, gyulladásos hipervascularizációja és folyadékgyüleme diagnosztizálható.", "kezeles": "Pihentetés, tehermentesítés. Az alkar flexor izomhasainak manuális mélymasszázsa, myofascialis release, az inas tapadás környezetében keresztfrikció. Nyújtó eljárások. Terápiás ultrahang és iontoforézis.", "latin_words": [{"term": "epicondylus medialis", "hu": "könyök belső csontbütyke"}, {"term": "enthesitis", "hu": "ín- vagy szalagtapadás gyulladása"}, {"term": "pronatio", "hu": "befelé forgatás"}, {"term": "flexio", "hu": "hajlítás"}]}, {"latin": "Digitus saltans", "hu": "Pattanó ujj", "oka": "Az ujjflexor inak és az őket rögzítő gyűrűs szalagok (elsősorban az A1 pulley) közötti mechanikai aránytalanság krónikus tenosynovitis miatt. Az ín krónikus túlterhelése miatt az ínhüvely beszűkül, vagy az ín állományában egy nodulus alakul ki, amely mozgás közben elakad a szalag alatt.", "tunetei": "Az érintett ujj behajlítása után a végtag elakad flexióban: a beteg nem képes önerejéből kinyújtani. Passzív vagy erőteljes aktív nyújtásra az ujj hirtelen, fájdalmas „pattanással” ugrik ki. Az MCP ízület tenyéri felszínén az A1 szalagnak megfelelő ponton kemény, nyomásérzékeny csomó tapintható.", "radiologia": "Röntgenfelvétellel csontos eltérés nem igazolható (negatív lelet). Ultrahanggal a flexor ín helyi nodularis megvastagodása, az A1 gyűrűs szalag gyulladásos megvastagodása, tenosynovialis folyadékgyülem (halo-tünet) vizualizálható.", "kezeles": "Korai fázisban: az érintett ujj átmeneti sínbe rögzítése, gyulladáscsökkentés. Manuális módszerek: a flexor ín lefutása mentén kíméletes, hosszanti lágyrész-lazítás és myofascialis release, az ín finom simítása és dörzsölése.", "latin_words": [{"term": "tenosynovitis", "hu": "ínhüvelygyulladás"}, {"term": "nodulus", "hu": "apró, kemény csomó"}, {"term": "halo-tünet", "hu": "ultrahangon folyadékgyűrűként látható jel"}]}]}, {"id": "ideg", "title": "Idegrendszeri megbetegedések és alagút-szindrómák", "latin": "Morbi nervorum et syndromata canalium", "icon": "nerve", "items": [{"latin": "Thoracic Outlet Syndrome", "hu": "Mellkas-kimeneti szindróma / TOS", "oka": "A plexus brachialis (karfonat) és/vagy a vasa subclavia mechanikus kompressziója a nyak-vállövi anatómiai réseken. Kiválthatja mm. scaleni hypertrophiája, m. pectoralis minor feszessége, előrehelyezett váll tartás, vagy costa cervicalis (nyaki borda). Szűkületi pontok: hiatus scaleni, costoclavicularis rés, subpectoralis alagút.", "tunetei": "Karba sugárzó fájdalom és ulnaris eloszlású zsibbadás (IV-V. ujj). A kéz intrinsic apróizmainak gyengesége, muscularis atrophia a thenar és hypothenar régióban. Vascularis érintettség esetén a végtag hűvössége, sápadtsága, pulzusgyengeség (pozitív Adson-, Allen- vagy Wright-teszt) vagy vénás pangás miatt cyanózis és ödéma.", "radiologia": "Nyaki gerinc és mellkas röntgenfelvétel álló helyzetben: kimutatja a csontos variációkat (nyaki borda, C7 processus transversus elongatio). Az arteriás és vénás kompresszió áramlási zavarai színes Doppler-ultrahanggal, MR- vagy CT-angiográfiával igazolhatók dinamikus provokációs tesztek alatt.", "kezeles": "A nyak-vállöv izomegyensúlyának helyreállítása. A szűkületet okozó izomcsoportok (mm. scaleni, m. pectoralis minor) manuális, mélyreható nyújtása, myofascialis release, a lapockastabilizálók erősítése.", "latin_words": [{"term": "plexus brachialis", "hu": "karfonat"}, {"term": "vasa subclavia", "hu": "kulcscsont alatti erek"}, {"term": "costa cervicalis", "hu": "nyaki borda"}, {"term": "ulnaris", "hu": "kisujj felőli oldali"}, {"term": "cyanosis", "hu": "kékes elszíneződés oxigénhiány miatt"}]}, {"latin": "Sclerosis multiplex", "hu": "Sclerosis multiplex / SM", "oka": "A központi idegrendszer krónikus, autoimmun demyelinisatiós kórfolyamata. Az immunrendszer T-sejtjei megtámadják a KIR fehérállományának myelinhüvelyét, gyulladásos gócokat generálva. A myelin pusztulása miatt az ingerületvezetés blokkolódik, a gyulladás helyén gliahegesedés (sclerosis/plakk) alakul ki.", "tunetei": "Polimorf tünettan, shubokban (fellángolásokban) zajló lefolyás. Neuritis retrobulbaris (egyoldali látásromlás), spasticus paresis, hyperreflexia, Babinski-jel. Kisagyi tünetek: ataxia, intenciós tremor, skandáló beszéd, nystagmus. Súlyos fatigue, paraesthesia és érzészavarok.", "radiologia": "Koponya és teljes gerincvelő kontrasztanyagos MR vizsgálata (arany standard). T2-súlyozott és FLAIR szekvenciákon multiplex, hyperintenzív fehérállományi plakkok periventricularisan (Dawson-ujjak). Az aktív gócok T1 képen halmozzák a gadolínium kontrasztanyagot.", "kezeles": "Neurorehabilitációs gyógytorna a spasticus tónus mérséklésére, egyensúly- és koordinációfejlesztésre, kontraktúra-megelőzésre. Manuálisan kizárólag kíméletes, lágy, nyugtató myofascialis technikák — szigorúan kerülve a túlmelegedést (Uhthoff-tünet).", "latin_words": [{"term": "demyelinisatio", "hu": "myelinhüvely károsodása"}, {"term": "gliahegesedés", "hu": "idegrendszeri hegesedés"}, {"term": "neuritis retrobulbaris", "hu": "látóideg-gyulladás a szemgolyó mögött"}, {"term": "paresis", "hu": "részleges bénulás"}, {"term": "hyperreflexia", "hu": "fokozott reflexműködés"}, {"term": "ataxia", "hu": "mozgáskoordinációs zavar"}, {"term": "nystagmus", "hu": "szemtekerezgés"}, {"term": "paraesthesia", "hu": "zsibbadás, bizsergés"}]}, {"latin": "Carpal tunnel syndrome", "hu": "Csuklóalagút szindróma", "oka": "A n. medianus kompressziója a csukló tenyéri oldalán található canalis carpi-ban. A szűk csontos-szalagos (retinaculum flexorum alatti) alagútban a nyomás megnő az ujjhajlító inak krónikus tenosynovitise, terhességi ödéma, trauma vagy endocrinopathia miatt.", "tunetei": "A hüvelyk-, mutató-, középső és gyűrűsujj radiális felének zsibbadása, paraesthesiája, égő fájdalma, amely éjszaka fokozódik. Pozitív Tinel-jel és Phalen-teszt. Később a marokszorítás gyengül, tárgyak esnek ki a kézből, a thenar izomzat ellaposodik.", "radiologia": "Röntgenfelvétel a csontos deformitások kizárására. Ultrahanggal a n. medianus megvastagodása az alagút bemeneténél, ellaposodása a retinaculum alatt (homokóra-tünet). ENG igazolja a vezetési sebesség csökkenését.", "kezeles": "Az alkar és kéztő flexor izomhasainak manuális myofascialis lazítása, az ínhüvelyek kíméletes mobilizációja, éjszakai rögzítősín viselése. Terápiás ultrahang. Súlyos, motoros atrophia esetén a retinaculum flexorum sebészi átvágása szükséges.", "latin_words": [{"term": "n. medianus", "hu": "középső karideg"}, {"term": "canalis carpi", "hu": "csuklóalagút"}, {"term": "retinaculum flexorum", "hu": "csukló hajlítóinakat leszorító szalag"}, {"term": "endocrinopathia", "hu": "hormonális eredetű betegség"}, {"term": "atrophia", "hu": "sorvadás"}]}, {"latin": "Parkinson-kór", "hu": "Parkinson-kór", "oka": "A központi idegrendszer krónikus, progresszív, neurodegeneratív megbetegedése. Extrapiramidális kórkép, amelyben a mesencephalon substantia nigra nevű területén a dopaminerg neuronok szelektíven elhalnak, ami súlyos dopaminhiányt és a törzsdúcok működészavarát okozza.", "tunetei": "Vezető tünettriász: 1) Nyugalmi remegés (pill-rolling tremor), amely célirányos mozgáskor megszűnik. 2) Izommerevség (rigiditás), passzív mozgatáskor szaggatott ellenállással (fogaskerék-tünet). 3) A mozgások lelassulása (bradykinesia/akinesia). Csoszogó, apróléptű járás, hypomimia (maszkarc).", "radiologia": "A strukturális képalkotók (koponya MR/CT) morfológiailag negatívak, elsősorban egyéb folyamatok kizárására szolgálnak. Funkcionális DaTscan (SPECT) vagy PET specifikusan kimutatja a striatális dopamin-transzporterek denzitásának drasztikus csökkenését.", "kezeles": "Célzott koordinációs, egyensúlyfejlesztő és ritmikus járásgyakorlatok, a mimikai izmok tornája. Manuális eljárások: a rigid, kötött izomzat kíméletes, lágy, dörzsölő és gyúró technikákkal történő lazítása a mozgásszabadság javítására.", "latin_words": [{"term": "substantia nigra", "hu": "középagyi dopaminerg sejtcsoport"}, {"term": "rigiditás", "hu": "izommerevség"}, {"term": "bradykinesia", "hu": "mozgások lelassulása"}, {"term": "akinesia", "hu": "mozgásképtelenség"}, {"term": "hypomimia", "hu": "csökkent mimika, maszkszerű arc"}]}, {"latin": "Polyneuropathia", "hu": "Perifériás idegek kiterjedt bántalma", "oka": "A perifériás spinalis idegek diffúz, szimmetrikus, szisztémás károsodása (axonopathia vagy demyelinisatio). Leggyakoribb metabolikus oka a diabetes mellitus (mikroangiopátia, szorbitol-felhalmozódás), krónikus alkoholizmus, B1-, B6-, B12-vitaminhiány vagy autoimmun folyamatok.", "tunetei": "Distalis, szimmetrikus, „zokni-” vagy „kesztyűszerű” eloszlásban jelentkező érzészavarok: paraesthesia, dysesthesia, vagy égő, késszúrásszerű neuropathiás fájdalom, amely éjszaka fokozódik. Hypaesthesia, a propriocepció zavara miatt bizonytalan járás, ataxia.", "radiologia": "A hagyományos képalkotók csontos lelete negatív. Nagy felbontású ultrahanggal az érintett perifériás idegtörzsek (pl. n. tibialis) diffúz, szimmetrikus megvastagodása látható. A definitív diagnózist az elektroneurográfia (ENG) adja: amplitúdó- és vezetésisebesség-csökkenés.", "kezeles": "Szenzomotoros gyógytorna, proprioceptív tréning az egyensúly megőrzésére. Manuális módszerek: nagyon finom, felületes, ingerlő, ecsetelő vagy lágy simító fogások a bőr receptorainak stimulálására. Szigorúan ügyelni kell a sérülékeny, érzéketlen bőr épségére!", "latin_words": [{"term": "axonopathia", "hu": "idegrost tengelyfonalának károsodása"}, {"term": "demyelinisatio", "hu": "myelinhüvely károsodása"}, {"term": "dysesthesia", "hu": "kóros, kellemetlen érzészavar"}, {"term": "hypaesthesia", "hu": "csökkent érzékelés"}, {"term": "propriocepció", "hu": "testhelyzet- és mozgásérzékelés"}, {"term": "ataxia", "hu": "mozgáskoordinációs zavar"}]}]}, {"id": "kardio", "title": "Szív- és érrendszeri megbetegedések", "latin": "Morbi systematis cardiovascularis", "icon": "heart", "items": [{"latin": "Acute myocardialis ischaemia", "hu": "Iszkémiás szívbetegség / ISB / Koszorúér-szűkület", "oka": "A szívizomzat oxigénigénye és a koszorúerek (arteriae coronariae) transzportkapacitása közötti akut vagy krónikus diszkrepancia. Hátterében atherosclerosis áll: az endothel sérülése után lipidmagvú atheromás plakkok alakulnak ki, amelyek beszűkítik az ér lumenét.", "tunetei": "Retrosternalis, típusosan szorító, nyomó, satuszerű mellkasi fájdalom (Angina pectoris), amely fizikai terhelésre, hideg levegőre vagy pszichés stresszre jelentkezik, és kisugárzik a bal vállba, kar ulnaris felszínére, nyakba, állkapocsba. Pihenésre vagy sublingualis Nitromint spray-re 5–15 percen belül szűnik.", "radiologia": "A végleges morfológiai diagnózist az invazív coronariographia vagy a non-invazív MDCT-angiográfia adja: kimutatja a plakkok lokalizációját, szerkezetét (meszes/lágy) és az ér lumenének százalékos szűkületét (stenosis).", "kezeles": "Szigorúan ellenőrzött, kardiológus által jóváhagyott fokozatos kardio-rehabilitációs tréning, testsúly- és étrendi kontroll. Manuálisan: stabil, panaszmentes időszakban lágy, szedatív masszázstechnikák alkalmazhatók a szimpatikus tónus csökkentésére, de erős, hirtelen frissítő fogások szigorúan kerülendők.", "latin_words": [{"term": "arteriae coronariae", "hu": "koszorúerek"}, {"term": "atherosclerosis", "hu": "érelmeszesedés"}, {"term": "endothel", "hu": "ér belső hámrétege"}, {"term": "retrosternalis", "hu": "szegycsont mögötti"}, {"term": "stenosis", "hu": "szűkület"}]}, {"latin": "Acute myocardialis infarctus", "hu": "Szívinfarktus", "oka": "Egy koszorúér lumenének hirtelen, teljes és tartós elzáródása (occlusio). Rendszerint egy instabil atheromás plakk ruptúrája következtében thrombus képződik. A mögöttes szívizomterületen 20–30 percen túl fennálló teljes oxigénhiány (anoxia) irreverzibilis necrosist okoz.", "tunetei": "Súlyos, megsemmisítő erejű, késszúrásszerű vagy satuszerű retrosternalis mellkasi fájdalom, amely pihenésre vagy Nitroglicerinre semmilyen javulást nem mutat, és 20 percnél tovább tart. Halálfélelem (angor animi), hideg verejtékezés, légszomj, hányinger, cardiogen shock. Nőknél, időseknél, cukorbetegeknél atípusos forma is lehetséges (néma infarktus).", "radiologia": "Sürgősségi invazív coronariographia mutatja meg a teljesen elzáródott koszorúérágat (TIMI 0 áramlás). Akut fázis után echocardiographia vagy szív-MR ábrázolja a szívizomfal mozgásképtelenségét, az ejekciós frakció (EF) csökkenését és a hegszövet kiterjedését.", "kezeles": "Akut fázisban: azonnali mentőhívás, manuális tevékenység szigorúan és életveszélyesen TILOS! Krónikus, stabilizált stádiumban, kardiológiai engedéllyel kíméletes, perifériás keringéstámogató gyógytorna. Manuálisan kizárólag stresszoldó, nagyon lágy simítások megengedettek.", "latin_words": [{"term": "occlusio", "hu": "elzáródás"}, {"term": "thrombus", "hu": "vérrög"}, {"term": "anoxia", "hu": "teljes oxigénhiány"}, {"term": "necrosis", "hu": "szövetelhalás"}, {"term": "angor animi", "hu": "halálfélelem"}, {"term": "cardiogen shock", "hu": "szív eredetű keringési elégtelenség"}, {"term": "dyspnoe", "hu": "légszomj"}]}]}], "glossary": [{"term": "abductio", "def": "Távolítás; végtag vagy testrész elmozdítása a test középvonalától."}, {"term": "acetabulum", "def": "Csípőízületi vápa, amelybe a combcsontfej illeszkedik."}, {"term": "adductio", "def": "Közelítés; testrész mozgatása a test középvonala felé."}, {"term": "adhesiv capsulitis", "def": "Befagyott váll; a vállízületi tok zsugorodása és hegesedése."}, {"term": "akinesia", "def": "Mozgásképtelenség vagy a mozgások erős csökkenése."}, {"term": "akinesis", "def": "Szívizomfal mozgásának kiesése."}, {"term": "anoxia", "def": "Teljes oxigénhiány a szövetekben."}, {"term": "ankylosis", "def": "Ízületi merevség vagy elcsontosodás."}, {"term": "anulus fibrosus", "def": "A porckorong külső rostos gyűrűje."}, {"term": "AP felvétel", "def": "Elölről hátrafelé irányuló röntgenfelvétel."}, {"term": "apophysis", "def": "Csontos nyúlvány vagy növekedési terület."}, {"term": "arteriae coronariae", "def": "Koszorúerek, a szívizmot ellátó erek."}, {"term": "articulatio coxae", "def": "Csípőízület."}, {"term": "articulatio genus", "def": "Térdízület."}, {"term": "atrophia", "def": "Sorvadás; szövet vagy izom tömegének csökkenése."}, {"term": "autoimmun", "def": "Olyan folyamat, amikor az immunrendszer saját szöveteket támad meg."}, {"term": "axonopathia", "def": "Az idegrost tengelyfonalának károsodása."}, {"term": "bursa", "def": "Nyáktömlő, amely csökkenti a súrlódást."}, {"term": "calcaneus", "def": "Sarokcsont."}, {"term": "canalis carpi", "def": "Csuklóalagút."}, {"term": "canalis spinalis", "def": "Gerincvelői csatorna."}, {"term": "caput femoris", "def": "Combcsontfej."}, {"term": "cardiogen shock", "def": "Szív eredetű keringési elégtelenség."}, {"term": "cauda equina", "def": "Lófarokidegek; az alsó gerincszakasz idegkötege."}, {"term": "cervicalis", "def": "Nyaki területre vonatkozó."}, {"term": "claudicatio spinalis", "def": "Gerinceredetű járási fájdalom vagy gyengeség."}, {"term": "clavus", "def": "Bőrkeményedés, tyúkszem."}, {"term": "congenitalis", "def": "Veleszületett."}, {"term": "contractura", "def": "Zsugorodás miatti mozgáskorlátozottság."}, {"term": "coronariographia", "def": "Koszorúérfestéses vizsgálat."}, {"term": "costa cervicalis", "def": "Nyaki borda."}, {"term": "cranialis", "def": "Koponya felé eső, felső irányú."}, {"term": "crepitacio", "def": "Ropogó, recsegő ízületi hang vagy érzés."}, {"term": "cryoterápia", "def": "Hidegkezelés, jegelés."}, {"term": "cyanosis", "def": "Kékes elszíneződés oxigénhiány miatt."}, {"term": "cysta", "def": "Folyadékkal telt tömlő."}, {"term": "dekompresszió", "def": "Nyomás csökkentése vagy megszüntetése."}, {"term": "degeneratív", "def": "Kopásos, elhasználódással járó."}, {"term": "demyelinisatio", "def": "Az idegrost myelinhüvelyének károsodása."}, {"term": "denzitás", "def": "Sűrűség; képalkotón a szövet tömörsége."}, {"term": "dermatoma", "def": "Egy ideggyökhöz tartozó bőrterület."}, {"term": "destructio", "def": "Roncsolódás, pusztulás."}, {"term": "DEXA", "def": "Csontsűrűségmérő röntgenvizsgálat."}, {"term": "dorsalis", "def": "Háti vagy hátsó irányú."}, {"term": "dorsalgia", "def": "Háti fájdalom."}, {"term": "dysesthesia", "def": "Kóros, kellemetlen érzészavar."}, {"term": "dysplasticus", "def": "Fejlődési rendellenességgel kapcsolatos."}, {"term": "echocardiographia", "def": "Szívultrahang-vizsgálat."}, {"term": "echogenitás", "def": "Ultrahangos visszaverődési tulajdonság."}, {"term": "elongatio", "def": "Megnyúlás, meghosszabbodás."}, {"term": "endocrinopathia", "def": "Hormonális eredetű betegség."}, {"term": "enthesis", "def": "Ín vagy szalag csonttapadási helye."}, {"term": "enthesitis", "def": "Ín- vagy szalagtapadás gyulladása."}, {"term": "epicondylus", "def": "Csontbütyök, izomtapadási terület."}, {"term": "epiphysealis", "def": "Csontvégi növekedési területre vonatkozó."}, {"term": "erosio", "def": "Kimart, felmaródott csont- vagy ízületi felszín."}, {"term": "excentricus", "def": "Megnyúlás közben végzett izommunka."}, {"term": "exocitózis", "def": "Sejtből történő anyagkiürítés."}, {"term": "exostosis", "def": "Csontos kinövés."}, {"term": "extrusio", "def": "Porckoronganyag nagyobb kitüremkedése."}, {"term": "facies articulares", "def": "Ízületi felszínek."}, {"term": "fascia", "def": "Izompólya, kötőszövetes lemez."}, {"term": "fibrosis", "def": "Kötőszövetes hegesedés."}, {"term": "flexio", "def": "Hajlítás."}, {"term": "foramen", "def": "Nyílás; idegkilépési csatorna."}, {"term": "frontális sík", "def": "A testet elülső és hátsó részre osztó sík."}, {"term": "gadolínium", "def": "MR-vizsgálatnál használt kontrasztanyag."}, {"term": "ganglion", "def": "Ízületi vagy ínhüvelyi eredetű tömlős képlet."}, {"term": "gliahegesedés", "def": "Idegrendszeri hegesedés támasztósejtekből."}, {"term": "genu valgum", "def": "X-láb."}, {"term": "genu varum", "def": "O-láb."}, {"term": "halo-tünet", "def": "Ultrahangon folyadékgyűrűként látható jel."}, {"term": "hamstring", "def": "A comb hátsó izomcsoportja."}, {"term": "hematóma", "def": "Vérömleny."}, {"term": "hernia", "def": "Sérv, kitüremkedés."}, {"term": "hydrops", "def": "Ízületi folyadékgyülem."}, {"term": "hyperalgesia", "def": "Fokozott fájdalomérzékenység."}, {"term": "hyperextensio", "def": "Túlzott hátrahajlítás vagy feszítés."}, {"term": "hyperlordosis", "def": "Fokozott gerincgörbület előrefelé."}, {"term": "hyperreflexia", "def": "Fokozott reflexműködés."}, {"term": "hypertrophia", "def": "Szövet vagy izom megnagyobbodása."}, {"term": "hypaesthesia", "def": "Csökkent érzékelés."}, {"term": "hypoechogenitás", "def": "Ultrahangon sötétebb megjelenés."}, {"term": "hypokinesis", "def": "Csökkent mozgás."}, {"term": "hypomimia", "def": "Csökkent mimika, maszkszerű arc."}, {"term": "hypoxia", "def": "Oxigénhiányos állapot."}, {"term": "idiopátiás", "def": "Ismeretlen eredetű."}, {"term": "immobilizáció", "def": "Rögzítés, mozdulatlanná tétel."}, {"term": "impingement", "def": "Becsípődés, ütközési szindróma."}, {"term": "infarctus", "def": "Vérellátási zavar miatt kialakuló szövetelhalás."}, {"term": "intervertebralis", "def": "Csigolyák közötti."}, {"term": "intraarticularis", "def": "Ízületen belüli."}, {"term": "intrinsic izmok", "def": "Helyben eredő és tapadó apró izmok."}, {"term": "ischaemia", "def": "Vérellátási hiány."}, {"term": "kyphosis", "def": "Háti domborulat, fokozott görbület hátrafelé."}, {"term": "lateralis", "def": "Oldalsó, külső irányú."}, {"term": "lateralflexio", "def": "Oldalra hajlítás."}, {"term": "ligamentum", "def": "Szalag."}, {"term": "lordosis", "def": "Gerinc előrefelé domború görbülete."}, {"term": "lumbalgia", "def": "Derékfájdalom."}, {"term": "lumbalis", "def": "Ágyéki területre vonatkozó."}, {"term": "lumbosacralis", "def": "Ágyéki-keresztcsonti területre vonatkozó."}, {"term": "lumen", "def": "Ér vagy csatorna belső ürege."}, {"term": "luxatio", "def": "Ficam, ízületi fej kimozdulása."}, {"term": "marginalis", "def": "Széli, peremi elhelyezkedésű."}, {"term": "medialis", "def": "Belső, középvonal felé eső."}, {"term": "metabolikus", "def": "Anyagcserével kapcsolatos."}, {"term": "microangiopathia", "def": "Kiserek károsodása."}, {"term": "mikrocirkuláció", "def": "A legkisebb erekben zajló keringés."}, {"term": "morbi", "def": "Betegségek."}, {"term": "morfológiai", "def": "Alaki, szerkezeti jellegű."}, {"term": "multiplex", "def": "Többszörös, több helyen jelentkező."}, {"term": "muscularis", "def": "Izommal kapcsolatos."}, {"term": "myelinhüvely", "def": "Az idegrost szigetelő burka."}, {"term": "myofascialis", "def": "Izmot és izompólyát érintő."}, {"term": "myogelosis", "def": "Fájdalmas izomcsomó, izomkeményedés."}, {"term": "necrosis", "def": "Szövetelhalás."}, {"term": "neurodegeneratív", "def": "Idegrendszeri sejtpusztulással járó."}, {"term": "neuropathias", "def": "Idegkárosodásból eredő."}, {"term": "nodularis", "def": "Csomós jellegű."}, {"term": "nucleus pulposus", "def": "A porckorong belső kocsonyás magja."}, {"term": "occlusio", "def": "Elzáródás."}, {"term": "osteoblast", "def": "Csontépítő sejt."}, {"term": "osteoclast", "def": "Csontbontó sejt."}, {"term": "osteophyta", "def": "Csontkinövés, csontcsőr."}, {"term": "palmaris", "def": "Tenyéri oldali."}, {"term": "pannus", "def": "Gyulladásos burjánzó ízületi szövet."}, {"term": "paraesthesia", "def": "Zsibbadás, bizsergés."}, {"term": "paravertebralis", "def": "Gerinc melletti."}, {"term": "paresis", "def": "Részleges bénulás, izomgyengeség."}, {"term": "pars interarticularis", "def": "A csigolyaív ízületi nyúlványok közötti része."}, {"term": "patella", "def": "Térdkalács."}, {"term": "periarticularis", "def": "Ízület körüli."}, {"term": "periventricularis", "def": "Agykamrák körüli."}, {"term": "plexus brachialis", "def": "Karfonat, a felső végtagot beidegző ideghálózat."}, {"term": "polyarthritis", "def": "Több ízület gyulladása."}, {"term": "propriocepció", "def": "Testhelyzet- és mozgásérzékelés."}, {"term": "protrusio", "def": "Porckorong-előboltosulás."}, {"term": "pseudocysta", "def": "Álciszta, valódi hámfal nélküli üreg."}, {"term": "punctio", "def": "Leszívás vagy szúrásos beavatkozás."}, {"term": "punctiform", "def": "Pontszerű."}, {"term": "radicularis", "def": "Ideg- vagy ideggyöki eredetű."}, {"term": "repositio", "def": "Helyretétel."}, {"term": "retinaculum", "def": "Inakat leszorító szalagos képlet."}, {"term": "retrosternalis", "def": "Szegycsont mögötti."}, {"term": "rigiditás", "def": "Izommerevség."}, {"term": "rotatio", "def": "Forgó mozgás."}, {"term": "sacroiliacalis", "def": "Keresztcsont-csípőcsont közötti."}, {"term": "sagittalis", "def": "Elöl-hátul irányú metszeti sík."}, {"term": "sclerosis", "def": "Megkeményedés, tömörödés vagy hegesedés."}, {"term": "sequestratio", "def": "Kiszakadt porckorongrész leválása."}, {"term": "spasticus", "def": "Görcsös, fokozott izomtónusú."}, {"term": "stenosis", "def": "Szűkület."}, {"term": "subchondralis", "def": "Porc alatti."}, {"term": "subluxatio", "def": "Részleges ficam."}, {"term": "synovium", "def": "Ízületi belhártya."}, {"term": "tenosynovitis", "def": "Ínhüvelygyulladás."}, {"term": "thenar", "def": "Hüvelykujjpárna izomzata."}, {"term": "thoracalis", "def": "Háti vagy mellkasi területre vonatkozó."}, {"term": "thrombus", "def": "Vérrög."}, {"term": "toxicopathia", "def": "Mérgező anyag okozta károsodás."}, {"term": "transversalis", "def": "Haránt irányú."}, {"term": "ulnaris", "def": "Kisujj felőli oldali."}, {"term": "vascularis", "def": "Érrendszeri."}]};
+
+const ICONS = {
+  oka: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>',
+  tunetei: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l2 7 4-14 2 7h6"/></svg>',
+  radio: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18M9 4v16"/></svg>',
+  kezeles: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-7-10a4.5 4.5 0 0 1 7-3.7A4.5 4.5 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>',
+  latinwords: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H18"/><path d="M8 7h6M8 10h6"/></svg>'
+};
+
+const CHEV = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>';
+
+let activeTab = DATA.categories[0].id;
+let searchTerm = "";
+
+function totalItems(){
+  return DATA.categories.reduce((s,c)=>s+c.items.length,0);
+}
+
+function renderStats(){
+  const el = document.getElementById('statsRow');
+  el.innerHTML = `
+    <div class="stat"><span class="num">${DATA.categories.length}</span><span class="lbl">Témakör</span></div>
+    <div class="stat"><span class="num">${totalItems()}</span><span class="lbl">Kórkép</span></div>
+    <div class="stat"><span class="num">${DATA.glossary.length}</span><span class="lbl">Latin fogalom</span></div>
+  `;
+}
+
+function renderTabs(){
+  const el = document.getElementById('tabs');
+  let html = DATA.categories.map(c => `
+    <button class="tab-btn ${c.id===activeTab?'active':''}" data-tab="${c.id}">
+      <span class="dot"></span>${c.title} <span class="count">(${c.items.length})</span>
+    </button>
+  `).join('');
+  html += `
+    <button class="tab-btn ${activeTab==='glossary'?'active':''}" data-tab="glossary">
+      <span class="dot"></span>Latin szószedet <span class="count">(${DATA.glossary.length})</span>
+    </button>
+  `;
+  el.innerHTML = html;
+  el.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      activeTab = btn.dataset.tab;
+      render();
+    });
+  });
+}
+
+function highlight(text){
+  if(!searchTerm) return text;
+  const re = new RegExp('('+searchTerm.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');
+  return text.replace(re, '<mark style="background:#F5D98A;border-radius:2px;">$1</mark>');
+}
+
+function markWarnings(text){
+  // wrap TILOS! sentences in warn style
+  return text.replace(/([^.]*TILOS[!\.][^.]*\.)/g, '<strong class="warn">$1</strong>');
+}
+
+function fieldHTML(label, key, icon, content){
+  let html = markWarnings(content);
+  html = highlight(html);
+  return `
+    <div class="field ${key}">
+      <div class="field-label">${icon} ${label}</div>
+      <div class="field-text">${html}</div>
+    </div>
+  `;
+}
+
+function latinWordsHTML(words){
+  if(!words || words.length === 0) return '';
+  const chips = words.map(w => `
+    <div class="latin-word-chip">
+      <span class="lt">${highlight(w.term)}</span>
+      <span class="ar">&rarr;</span>
+      <span class="hu">${highlight(w.hu)}</span>
+    </div>
+  `).join('');
+  return `
+    <div class="field latinwords">
+      <div class="field-label">${ICONS.latinwords} Latin szavak</div>
+      <div class="latin-word-list">${chips}</div>
+    </div>
+  `;
+}
+
+function itemMatches(item){
+  if(!searchTerm) return true;
+  let hay = (item.latin+' '+item.hu+' '+item.oka+' '+item.tunetei+' '+item.radiologia+' '+item.kezeles).toLowerCase();
+  if(item.latin_words){
+    hay += ' ' + item.latin_words.map(w=>w.term+' '+w.hu).join(' ').toLowerCase();
+  }
+  return hay.includes(searchTerm.toLowerCase());
+}
+
+function renderCategory(cat){
+  document.getElementById('glossaryWrap').innerHTML = '';
+  const headWrap = document.getElementById('catHeadWrap');
+  headWrap.innerHTML = `
+    <div class="cat-head">
+      <h2>${cat.title}</h2>
+      <div class="latin">${cat.latin}</div>
+    </div>
+  `;
+
+  const items = cat.items.filter(itemMatches);
+  const cardsWrap = document.getElementById('cardsWrap');
+
+  if(items.length === 0){
+    cardsWrap.innerHTML = `<div class="no-results">Nincs egyező kórkép ehhez a kereséshez ebben a témakörben.</div>`;
+    return;
+  }
+
+  cardsWrap.innerHTML = items.map((item, idx) => `
+    <div class="card" data-idx="${idx}">
+      <div class="card-head">
+        <div class="card-titles">
+          <span class="card-latin">${highlight(item.latin)}</span>
+          <div class="card-hu">${highlight(item.hu)}</div>
+        </div>
+        ${CHEV}
+      </div>
+      <div class="card-body">
+        <div class="field-grid">
+          ${fieldHTML('Kialakulásának oka','oka',ICONS.oka,item.oka)}
+          ${fieldHTML('Jellemző tünetek','tunetei',ICONS.tunetei,item.tunetei)}
+          ${fieldHTML('Radiológiai kép','radio',ICONS.radio,item.radiologia)}
+          ${fieldHTML('Alkalmazható módszerek','kezeles',ICONS.kezeles,item.kezeles)}
+          ${latinWordsHTML(item.latin_words)}
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  cardsWrap.querySelectorAll('.card').forEach(card=>{
+    const head = card.querySelector('.card-head');
+    head.addEventListener('click', ()=>{
+      card.classList.toggle('open');
+    });
+  });
+
+  // auto-open all cards if searching (so matches are visible)
+  if(searchTerm){
+    cardsWrap.querySelectorAll('.card').forEach(c=>c.classList.add('open'));
+  }
+}
+
+function renderGlossary(){
+  document.getElementById('catHeadWrap').innerHTML = `
+    <div class="cat-head" style="background:linear-gradient(135deg,#E4E9E6,var(--paper-2));border-left-color:var(--accent-2);">
+      <h2>Latin szakkifejezések szószedete</h2>
+      <div class="latin" style="color:var(--accent-2);">Index terminorum</div>
+    </div>
+  `;
+  document.getElementById('cardsWrap').innerHTML = '';
+
+  const terms = DATA.glossary.filter(g=>{
+    if(!searchTerm) return true;
+    return (g.term+' '+g.def).toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
+  const wrap = document.getElementById('glossaryWrap');
+  if(terms.length===0){
+    wrap.innerHTML = `<div class="no-results">Nincs egyező kifejezés.</div>`;
+    return;
+  }
+
+  wrap.innerHTML = `<div class="glossary-grid">
+    ${terms.map(g=>`
+      <div class="gterm">
+        <div class="t">${highlight(g.term)}</div>
+        <div class="d">${highlight(g.def)}</div>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function render(){
+  renderTabs();
+  if(activeTab === 'glossary'){
+    renderGlossary();
+  } else {
+    const cat = DATA.categories.find(c=>c.id===activeTab);
+    renderCategory(cat);
+  }
+}
+
+document.getElementById('searchInput').addEventListener('input', (e)=>{
+  searchTerm = e.target.value.trim();
+  render();
+});
+
+renderStats();
+render();
+</script>
+</body>
+</html>
